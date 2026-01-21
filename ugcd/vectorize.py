@@ -1,7 +1,4 @@
-# Convert raster masks to vector polygons
-
 from typing import Optional
-
 import cv2
 import numpy as np
 from shapely.geometry import Polygon
@@ -25,7 +22,6 @@ def mask_to_polygons(mask: np.ndarray, simplify_tolerance: float = 1.0) -> list[
         try:
             poly = Polygon(coords)
             if not poly.is_valid:
-                #try to fix invalid polygon
                 poly = poly.buffer(0)
 
             if poly.area > 0:

@@ -1,5 +1,3 @@
-# Image loading functions
-
 from pathlib import Path
 from typing import Tuple, Union
 
@@ -9,7 +7,7 @@ import rasterio
 
 
 def load_image(path: Union[str, Path], as_grayscale: bool = True) -> Tuple[np.ndarray, dict]:
-    #Load image from file (PNG, JPG, or GeoTIFF) Returns image array and metadata dict
+    #returns image array and metadata dict
     path = Path(path)
     if not path.exists():
         raise FileNotFoundError(f"Image not found: {path}")
@@ -35,7 +33,6 @@ def load_image(path: Union[str, Path], as_grayscale: bool = True) -> Tuple[np.nd
                 if as_grayscale and len(img.shape) == 3:
                     img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
 
-                #Store geo metadata
                 metadata["crs"] = src.crs
                 metadata["transform"] = src.transform
                 metadata["bounds"] = src.bounds
@@ -44,14 +41,12 @@ def load_image(path: Union[str, Path], as_grayscale: bool = True) -> Tuple[np.nd
 
                 return img, metadata
         except Exception as e:
-            #Fallback to OpenCV if rasterio fails
             print(f"Warning: Could not read as GeoTIFF ({e}), trying OpenCV...")
 
     if as_grayscale:
         img = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
     else:
         img = cv2.imread(str(path), cv2.IMREAD_COLOR)
-        #openCV loads as BGR, convert to RGB
         if img is not None and len(img.shape) == 3:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
@@ -78,7 +73,7 @@ def load_rgb_bands(
     blue_path: Union[str, Path],
     as_grayscale: bool = True,
 ) -> Tuple[np.ndarray, dict]:
-    #load RGB bands from separate files (for the sentinel format) ombines them into single image and normalizes uint16 to uint8
+    #load RGB bands from separate files n combines them into single image and normalizes uint16 to uint8
     red_path = Path(red_path)
     green_path = Path(green_path)
     blue_path = Path(blue_path)

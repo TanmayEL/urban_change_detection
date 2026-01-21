@@ -1,7 +1,4 @@
-#Post processing: clean up change masks
-
 from typing import Optional
-
 import cv2
 import numpy as np
 from skimage import morphology
@@ -13,7 +10,6 @@ def remove_small_blobs(mask: np.ndarray, min_area: int = 100) -> np.ndarray:
         mask, connectivity=8
     )
 
-    #output mask
     filtered_mask = np.zeros_like(mask)
 
     for label_id in range(1, num_labels):
